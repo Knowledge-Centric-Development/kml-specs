@@ -1,0 +1,260 @@
+<kml\spec>
+- type: spec
+- version: 0.1.0
+- purpose: Define the syntax and semantics of Knowledge Markup Language (KML) for creating an extensible, structured knowledge base. It balances being LLM-friendly with human readability.
+- keywords: kml 10, specification 10, data_format 10, knowledge_base 9
+- expect: This document provides a complete and consistent definition of the KML language.
+- author: Mikhail Korchun, mrkorchun@gmail.com
+- url: https://github.com/Knowledge-Centric-Development/kml-specs
+- license: MIT (see LICENSE)
+- copyright: © 2025
+  <structure>
+    - purpose: Structure of this specification.
+    - 1_Syntax: [[kml\spec\syntax]]
+    - 2_Types: [[kml\spec\types]]
+    - 3_Graph: [[kml\spec\graph]]
+    - 4_Meta: [[kml\spec\meta]]
+    - 5_Validation: [[kml\spec\validation]]
+    - expect: The specification is logically structured into its primary components.
+  </structure>
+  <concepts>
+    <fractal_knowledge_development>
+        - type: concept
+        - purpose: To establish that KML is designed for progressive disclosure, where high-level concepts can be fractally expanded into their constituent parts, and those parts link back to the whole.
+        - expect: Knowledge is structured hierarchically and is bi-directionally navigable.
+        - rule_downward: High-level concepts should link to the more detailed concepts that compose them, often via a table of contents or `see_also` links.
+        - rule_upward: Every detailed concept or technique that is part of a larger workflow or principle MUST include a `source` or `part_of` link pointing back to its high-level container.
+    </fractal_knowledge_development>
+  </concepts>
+<syntax>
+  - type: section
+  - purpose: Describe the basic syntactic constructs of KML.
+  - keywords: syntax 10, kml 10, grammar 9
+  - expect: This section clearly defines all fundamental syntax rules of KML.
+  <block>
+    - type: concept
+    - purpose: The primary, named structural unit of KML.
+    - definition: Enclosed by `<block_name>` and `</block_name>` tags. The name must use `snake_case`.
+    - naming_rule: snake_case. Namespaces are indicated using a backslash `\`. Blocks nested inside a `section`-type block are considered to belong to that parent block's namespace.
+    - example: [[kml\spec\syntax\block_example]]
+    - expect: A block is a named, tagged unit with a `snake_case` name.
+  </block>
+  <namespace_directory_correspondence>
+    - type: rule
+    - purpose: To ensure a logical link between the namespace structure and the physical file structure.
+    - rule: The namespace of a block should, as closely as possible, mirror the directory path where the file is located.
+    - expect: Namespaces in KML files should correspond to the directory structure.
+  </namespace_directory_correspondence>
+  <prompt_first_principle>
+    - type: concept
+    - purpose: A core syntactic principle of KML that allows arbitrary text insertion without escaping.
+    - definition: Any line inside a block that is not a comment (`//...`) or a metadata line (i.e., does not start with `- `) is treated by default as part of the block's main textual content.
+    - expect: Text not matching metadata or comment formats is treated as the block's primary content.
+  </prompt_first_principle>
+  <cdata_forbidden_rule>
+    - type: concept
+    - purpose: To explicitly forbid the use of XML/HTML CDATA sections.
+    - definition: The use of `<![CDATA[...]]>` is strictly forbidden. KML is not XML, and this construct is invalid. For multi-line content, use indentation according to the `prompt_first_principle`.
+    - expect: `CDATA` sections are considered a syntax error.
+  </cdata_forbidden_rule>
+  <metadata_line>
+    - type: concept
+    - purpose: Format for structured, single-line assertions.
+    - format_rule: The line must begin with the prefix `- ` (hyphen followed by a space), followed by `key: value`.
+    - example: `- purpose: Describe metadata format.`
+    - expect: A line starting with `- key: value` is parsed as a key-value pair.
+  </metadata_line>
+  <expect_metadata_field>
+    - type: concept
+    - purpose: Enables declarative specification of invariants, validation rules, or contracts.
+    - usage: The value of the `expect` field is used to auto-generate tests, validators, or for AI agent self-checking.
+    - format_rule: `- expect: A brief instruction on what is expected in this concept, spec, or other.`
+    - rule: The `- expect:` field is mandatory for all blocks and must contain a verifiable, positive-key statement about the block's invariant condition.
+    - expect: Every block has a concise, high-level summary of its purpose in the `expect` field.
+  </expect_metadata_field>
+  <comment_line>
+    - type: concept
+    - purpose: A comment line ignored by the parser.
+    - format_rule: A line starting with `//`.
+    - expect: Lines starting with `//` are ignored by the parser.
+  </comment_line>
+</syntax>
+<types>
+  - type: section
+  - purpose: Describe the type system for all blocks in KML.
+  - keywords: type_system 10, kml 10
+  - expect: This section defines all valid block types and their specific rules.
+  <user_extensibility>
+    - type: concept
+    - purpose: To establish that users can define their own keywords and the mechanics associated with them.
+    - rule: The core KML specification defines a minimal set of mandatory fields. Users are free to introduce new metadata keywords and define their operational semantics within their project's context.
+    - expect: Users can extend KML with custom keywords and mechanics.
+  </user_extensibility>
+  <default_type_rule>
+    - type: concept
+    - purpose: Rule for unstructured input.
+    - definition: If a block lacks a `- type:` field, it is automatically assigned the type `raw`.
+    - expect: A block without a `type` field defaults to `raw`.
+  </default_type_rule>
+  <defined_types_overview>
+    - type: concept
+    - purpose: Overview of reserved types for structured blocks.
+    - expect: Provides a list of all official, reserved block types.
+    - raw: [[kml\spec\types\raw]]
+    - concept: [[kml\spec\types\concept]]
+    - workflow: [[kml\spec\types\workflow]]
+    - example: [[kml\spec\types\example]]
+    - description: [[kml\spec\types\description]]
+    - section: [[kml\spec\types\section]]
+    - undefined_concept: [[kml\spec\types\undefined_concept]]
+  </defined_types_overview>
+  <raw>
+    - type: concept
+    - purpose: Unstructured notes, drafts, or raw information. Not subject to strict validation.
+    - expect: A `raw` block holds unprocessed information.
+  </raw>
+  <concept>
+    - type: concept
+    - purpose: For general concepts, definitions, and principles.
+    - expect: A `concept` block defines a single, focused idea.
+  </concept>
+  <workflow>
+    - type: concept
+    - purpose: For describing agent-executable processes.
+    - expect: A `workflow` block describes a sequence of steps to be executed.
+  </workflow>
+  <positive_phrasing_rule>
+    - type: concept
+    - purpose: All statements should be framed in a positive, constructive manner.
+    - definition: Formulations should describe what *should be* or what *is*, rather than what *should not be* or what *is not*. Negative statements are only permitted within `contradiction` or `anti_pattern` type blocks.
+    - expect: All blocks use positive phrasing unless they are of type `contradiction` or `anti_pattern`.
+  </positive_phrasing_rule>
+  <example>
+    - type: concept
+    - purpose: For illustrative examples.
+    - expect: An `example` block demonstrates a concept or rule.
+  </example>
+  <description>
+    - type: concept
+    - purpose: For detailed explanations of concepts or processes.
+    - expect: A `description` block provides a detailed explanation.
+  </description>
+  <section>
+    - type: concept
+    - purpose: A structural type for grouping other blocks and defining a namespace.
+    - expect: A `section` block groups related blocks under a common namespace.
+  </section>
+  <type_requirements>
+    - type: concept
+    - purpose: Required fields for each type.
+    - expect: Each block type has a set of mandatory fields.
+    - concept: `- purpose:`
+    - spec: `- purpose:`
+    - workflow: `<steps>`
+    - kilo_mode: `- purpose:`
+    - contradiction: `- contradicts: [[other_block]]`
+  </type_requirements>
+</types>
+<graph>
+  - type: section
+  - purpose: Describe mechanisms that transform a collection of blocks into a connected knowledge graph.
+  - keywords: knowledge_graph 10, connectivity 10, references 9
+  - expect: This section defines how blocks are linked to form a graph.
+  <cross_reference>
+    - type: concept
+    - purpose: The primary mechanism for linking blocks together.
+    - format_rule: `[[path/to/block]]`.
+    - resolution_rule_relative: `[[path/to/concept]]` - relative to the current block.
+    - resolution_rule_absolute: `[[/path/to/concept]]` - from the document root.
+    - error_handling: If a referenced block is not found - validation error (`completeness_principle`).
+    - example: `- depends_on: [[/kml/spec/syntax/block]]`
+    - expect: A `[[...]]` link must resolve to an existing block.
+  </cross_reference>
+  <relations>
+    - type: concept
+    - purpose: Mechanism for explicitly and typedly describing relationships between blocks.
+    - format_rule: Implemented via metadata fields: `relation_key: [[reference]]`.
+    - example: `- source: [[/my_project/raw_notes/idea_123]]`
+    - common_relations:
+      - `- defines: [[concept_block]]`
+      - `- exemplifies: [[example_block]]`
+      - `- part_of_process: [[workflow_block]]`
+      - `- contradicts: [[contradiction_block]]`
+      - `- see_also: [[related_block]]`
+    - expect: Explicit relations are defined using metadata keys.
+  </relations>
+</graph>
+<meta>
+  - type: section
+  - purpose: Describe metadata that characterizes the KML document itself.
+  - keywords: meta 9, documentation 8
+  - expect: This section defines rules for the document's own metadata.
+  <document_header>
+    - type: concept
+    - purpose: The first block in a file, describing the document as a whole.
+    - required_fields: `- type: spec`, `- version:`, `- purpose:`
+    - optional_fields: `- keywords:`
+    - example: [[kml\spec]]
+    - expect: The first block in a file is a `spec` block that acts as a document header.
+  </document_header>
+  <language_rule>
+    - type: concept
+    - purpose: To establish a single, consistent language for all knowledge base documents to ensure clarity and universal understanding.
+    - keywords: language 10, english 10, consistency 9
+    - expect: All `.kml` files are written in English.
+  </language_rule>
+  <keywords_field>
+    - type: concept
+    - purpose: A universal field for tags that facilitate search and classification.
+    - format_rule: `- keywords: tag1 10, tag2 9, tag3 8` (with optional weights).
+    - expect: The `keywords` field contains a comma-separated list of weighted tags.
+  </keywords_field>
+</meta>
+<validation>
+  - type: section
+  - purpose: Describe principles and rules for validating KML documents.
+  - keywords: validation 10, principles 9
+  - expect: This section defines the core principles for ensuring a valid knowledge base.
+  <completeness_principle>
+    - type: concept
+    - purpose: Ensure all references point to existing definitions.
+    - expect: All `[[...]]` references must resolve to a defined block.
+  </completeness_principle>
+  <consistency_principle>
+    - type: concept
+    - purpose: Ensure logical integrity of knowledge.
+    - expect: The knowledge base does not contain contradictory information, except where explicitly marked.
+  </consistency_principle>
+  <structure_validation>
+    - type: concept
+    - purpose: Ensure the document conforms to KML structural rules.
+    - expect: The document adheres to all specified structural rules.
+    - rules:
+      - The document must start with a block of type `spec`.
+      - All blocks must have names in `snake_case`; `\` may be used to explicitly specify a namespace.
+      - Blocks nested within a `section`-type block are considered to belong to that `section`'s namespace.
+      - All `[[...]]` references must resolve (see `missed_topics` exception in `completeness_principle`).
+      - All blocks must have an `- expect:` field.
+      - Blocks must have a `- type:` field.
+      - Blocks may have a `- keywords:` field.
+  </structure_validation>
+</validation>
+<syntax>
+  - type: section
+  - purpose: Examples and additional clarifications on syntax.
+  - expect: This section provides clear examples of correct syntax.
+  <block_example>
+    - type: example
+    - purpose: Example of a valid KML block.
+    - keywords: example 9, block 8
+    - expect: This example demonstrates a syntactically correct block.
+    <my_example_block>
+      - type: concept
+      - purpose: Demonstrate block structure.
+      - keywords: demonstration 8
+      - expect: The block has a name, type, purpose, and content.
+      This is the textual content of the block.
+    </my_example_block>
+  </block_example>
+</syntax>
+</kml\spec>
