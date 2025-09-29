@@ -11,6 +11,9 @@ At its essence, our methodology is built on two pillars:
 *   **Knowledge-Driven Development:** We believe that robust, reliable code is a natural outcome of a well-defined and rigorously maintained knowledge context. Every feature, every decision, and every line of code traces its lineage back to a verifiable source within our KML Knowledge Base.
 *   **AI-Enhanced Verification:** Artificial intelligence isn't just a tool for automation; it's an integral partner in design assurance. Our methodology leverages AI to continuously verify design principles, detect inconsistencies, and validate specifications against the living knowledge base.
 
+## KML Specification: The Foundation
+The Knowledge Markup Language (KML) is the standardized format that underpins our Knowledge-Centric Development. The official specification, defined in [`spec.kml`](spec.kml), details the syntax and semantics for creating an extensible and structured knowledge base. This machine-readable and human-friendly format allows for direct application in AI-driven processes, ensuring that our knowledge is not only well-defined but also immediately actionable.
+
 ## Key Capabilities of the KML Knowledge Base
 
 The KML Knowledge Base provides a suite of powerful capabilities that underpin our knowledge-centric development process:
